@@ -86,7 +86,7 @@ public class Sync
                         new Fucktory<>(
                                 () -> new Local.Checker(new File(mLocalPath))),
                         new Fucktory<>(
-                                Bool.get(mContext, R.string.cache_switch),
+                                Bool.get(mContext, Bool.CACHE),
                                 () -> new Cache.Checker(new File(mCachePath))),
                         new Fucktory<>(
                                 () -> new Media.Checker(mContext, mLocalPath))

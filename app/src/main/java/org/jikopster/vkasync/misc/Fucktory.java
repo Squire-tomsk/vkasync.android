@@ -39,7 +39,7 @@ public class Fucktory<T>
         boolean[] bools = new boolean[fucktories.length];
         return () -> new Iterator() {
             int i = 0;
-            int l = fucktories.length - 1;
+            int l = fucktories.length;
 
             @Override
             public boolean hasNext() {
