@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fail">FAIL</string>
+    <string name="done">DONE</string>
+
+    <string name="error_count">Error count: %d</string>
+</resources>

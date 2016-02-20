@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <integer name="com_vk_sdk_AppId">4519775</integer>
+    
+    <string name="key_root" translatable="false">root</string>
+    
+    <string name="key_action_sync" translatable="false">perform</string>
+
+    <string name="folder_local_size" translatable="false">local_folder_size</string>
+    <string name="folder_local" translatable="false">local_folder</string>
+    <string name="folder_cache" translatable="false">cache_folder</string>
+    
+    <string name="cloud_switch" translatable="false">cloud_switch</string>
+    <string name="local_switch" translatable="false">local_switch</string>
+    
+    <string name="cache_switch" translatable="false">cache_switch</string>
+    <string name="clean_switch" translatable="false">clean_switch</string>
+    
+    <string name="key_action_clean" translatable="false">clear</string>
+    
+    <string name="key_token" translatable="false">vk_user_fname</string>
+    
+    <string name="key_eula" translatable="false">eula</string>
+    
+</resources>

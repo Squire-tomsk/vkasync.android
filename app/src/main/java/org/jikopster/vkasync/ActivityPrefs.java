@@ -1,0 +1,203 @@
+package org.jikopster.vkasync;
+
+import java.io.File;
+
+import org.jikopster.vkasync.action.Clear;
+import org.jikopster.vkasync.action.Sync;
+import org.jikopster.vkasync.action.VK;
+import org.jikopster.vkasync.core.*;
+import org.jikopster.vkasync.preference.Path;
+import org.jikopster.vkasync.ui.SingleToast;
+
+import org.jikopster.vkasync.ui.ActionPreference;
+import org.jikopster.vkasync.ui.ActionState;
+import org.jikopster.vkasync.ui.TokenPreference;
+
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Build;
+import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.StyleSpan;
+import android.util.Log;
+
+
+public class ActivityPrefs extends PreferenceActivity
+{
+    @SuppressWarnings("deprecation")
+    private Preference preference(int key) {
+        return findPreference(getString(key));
+    }
+
+    private VK mVK = new VK(this);
+	
+	private static final ActionState
+			sSyncState  = new ActionState(),
+			sCleanState = new ActionState();
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB) @SuppressWarnings("deprecation")
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        addPreferencesFromResource(R.xml.preferences);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        TokenPreference token = (TokenPreference) preference(R.string.key_token);
+        mVK.setOnRefreshListener(token::refresh);
+        token.setOnPreferenceClickListener(preference -> {
+            mVK.toggle();
+            return true;
+        });
+
+        sSyncState
+                .setPreference((ActionPreference) preference(R.string.key_action_sync))
+                .setOnPreferenceClickListener(preference -> {
+                    mVK.login(this::sync);
+                    return true;
+                });
+
+        sCleanState
+                .setPreference((ActionPreference) preference(R.string.key_action_clean))
+                .setOnPreferenceClickListener(preference -> {
+                    File dir = new File(Path.getCurrent(this, Path.LOCAL));
+                    showDialog(dir.isDirectory() ? DIALOG_CLEAN : DIALOG_CLEAR);
+                    return true;
+                });
+
+        Preference eula = preference(R.string.eula);
+        boolean isEulaAccepted = PreferenceManager
+                .getDefaultSharedPreferences(this).getBoolean(eula.getKey(), false);
+        if (isEulaAccepted) return;
+
+        PreferenceScreen root = (PreferenceScreen) preference(R.string.key_root);
+        setPreferenceScreen((PreferenceScreen) preference(R.string.key_eula));
+        eula.setOnPreferenceChangeListener(
+                (preference, newValue) -> {
+                    if (newValue.equals(true)) {
+                        eula.setOnPreferenceChangeListener(null);
+                        setPreferenceScreen(root);
+                    }
+                    return true;
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (mVK.onActivityResult(requestCode, resultCode, data)) return;
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private static final int
+            DIALOG_CLEAN = 1,
+            DIALOG_CLEAR = 2;
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+            case DIALOG_CLEAN:
+                return new
+                        AlertDialog.Builder(this)
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> clean())
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setMessage("")
+                        .create();
+            case DIALOG_CLEAR:
+                return new
+                        AlertDialog.Builder(this)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .setMessage("")
+                        .create();
+        }
+		return null;
+	}
+
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog) {
+		String message;
+		
+		switch (id) {
+		case DIALOG_CLEAN:
+			message = getString(R.string.clear_dialog_message);
+			break;
+		case DIALOG_CLEAR:
+			message = getString(R.string.clean_dialog_message);
+			break;
+		default:
+			return;
+		}
+		int i = message.indexOf("_");
+		
+		SpannableStringBuilder s = new SpannableStringBuilder(new File(Path.getCurrent(this, Path.LOCAL)).getName());
+		s.setSpan(new StyleSpan(Typeface.BOLD), 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		s.insert(0, message, 0, i);
+		s.append(message.substring(i + 1));
+		
+		((AlertDialog)dialog).setMessage(s);
+	}
+
+    private void show(SingleToast.State state) {
+        show(state, null);
+    }
+    private void show(SingleToast.State state, String message) {
+        SingleToast.show(this, state, message);
+    }
+    public void show(SingleToast.State state, Exception e, String text) {
+        String message = Sync.getMessage(this, e);
+        if (!TextUtils.isEmpty(text))
+            message = String.format("%s%n%s", message, text);
+        show(state, message);
+    }
+
+    private void sync() {
+        sSyncState.PROGRESS.apply();
+        new Sync(this).sync(new Master.Listener()
+        {
+            @Override
+            public void onComplete() {
+                sSyncState.ENABLED.apply();
+                show(
+                        count == 0
+                                ? SingleToast.State.DONE
+                                : SingleToast.State.WARN,
+                        count == 0
+                                ? null
+                                : getString(R.string.error_count, count)
+                );
+            }
+            @Override
+            public void onFail(Exception e) {
+                sSyncState.ENABLED.apply();
+                show(SingleToast.State.FAIL, e, null);
+            }
+            private int count;
+            @Override
+            public void onWarning(Exception e) {
+                count++;
+            }
+        });
+    }
+
+    private void clean() {
+        sCleanState.PROGRESS.apply();
+        Clear.clear(this, result -> {
+            show(result
+                    ? SingleToast.State.DONE
+                    : SingleToast.State.FAIL);
+            sCleanState.ENABLED.apply();
+        });
+    }
+}
+
+

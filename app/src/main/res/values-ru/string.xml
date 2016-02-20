@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="download_notification_description">Нажмите для отмены</string>
+    
+    <string name="perform_title">Синхронизация</string>
+    <string name="perform_summary">Выполнить выбранные действия</string>
+    
+    <string name="my_audios">Мои аудиозаписи</string>
+    <string name="cloud_switch_title">Загрузка</string>
+    <string name="cloud_switch_summary_on">Загружать новые аудиозаписи</string>
+    <string name="cloud_switch_summary_off">Не загружать</string>
+    <string name="local_switch_title">Удаление</string>
+    <string name="local_switch_summary_on">Удалять удаленные аудиозаписи</string>
+    <string name="local_switch_summary_off">Не удалять</string>
+    
+    <string name="local_cache">Локальный кэш</string>
+    <string name="cache_switch_title">Копирование</string>
+    <string name="cache_switch_summary_on">Копировать по возможности</string>
+    <string name="cache_switch_summary_off">Игнорировать локальный кэш</string>
+    <string name="clean_switch_title">Удаление</string>
+    <string name="clean_switch_summary_on">Удалять копии из кэша</string>
+    <string name="clean_switch_summary_off">Не удалять из кэша</string>
+    <string name="cache_folder_title">Расположение кэша</string>
+    
+    <string name="local_storage">Локальное хранилище</string>
+    <string name="local_folder_size_title">Размер</string>
+    <string name="local_folder_title">Расположение</string>
+    <string name="clear_title">Очистить</string>
+    <string name="clear_summary">Удалить аудиозаписи</string>
+    <string name="clear_dialog_message">Папка _ будет удалена</string>
+    <string name="clean_dialog_message">Папка _ не существует</string>
+    
+   	<string name="vk_account">Аккаунт ВКонтакте</string>
+   	<string name="token_title_in">Войти</string>
+   	<string name="token_title_out">Выйти</string>
+    
+    <string name="app_about">Приложение</string>
+    <string name="web_title">Веб-сайт</string>
+    <string name="eula_title">Пользовательское соглашение</string>
+    	<string name="eula_accept">Принимаю</string>
+
+</resources>

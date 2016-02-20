@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="eula" translatable="false">EULA 1.0.0.1</string>
+
+	<string name="eula_text"><b>1. Definitions</b>\n
+1.1. Agreement - this agreement.\n
+1.2. App - this software.\n
+1.3. Developer - the App developer.\n
+1.4. User or You - any person using the App.\n
+1.5. Device - the device on which the App is installed.\n
+ <b>2. Accepting this Agreement</b>\n
+2.1. This Agreement forms a legally binding contract between you and Developer in relation to your use of the App.\n
+2.2. Using the App, you hereby accept in full all the terms of this Agreement.\n
+2.3. Developer can make changes to this Agreement at any time. New edition of the Agreement is distributed as part of the App update ("Update"). You should check for Updates regularly. You may not use the App until you accepted the latest edition of the Agreement.\n
+ <b>3. Use of the App by You</b>\n
+3.1. You agree to use the App only for purposes that are permitted by (a) this Agreement and (b) any applicable law, regulation or generally accepted practices or guidelines in the relevant jurisdictions.\n
+3.2. You understand and agree that the App can download audio files on the Device so that these files are available, including for playing and/or copying, to third-party software.\n
+3.3. Use of the App does not give you any additional rights to downloaded audio files.\n
+3.4. You agree that if you download audio files using the App, you will protect legal rights to that files of their respective owners.\n
+3.5. You agree not to use the App to download audio files, a copy of which you did not have before.\n
+3.6. You agree that you are solely responsible for (and that Developer has no responsibility to you or to any third party for) any actions you perform using the App and for the consequences (including any loss or damage which Developer or any third party may suffer) of any such action. These consequences include, but are not limited to, intellectual property claims relating to audio files you download using the App.\n
+3.7. You agree that you are solely responsible for (and that Developer has no responsibility to you or to any third party for) any breach of your obligations under this Agreement, any applicable third party contract or terms of service, or any applicable law or regulation, and for the consequences (including any loss or damage which Developer or any third party may suffer) of any such breach.\n
+ <b>4. DISCLAIMER OF WARRANTIES</b>\n
+4.1. YOU EXPRESSLY UNDERSTAND AND AGREE THAT YOUR USE OF THE APP IS AT YOUR SOLE RISK AND THAT THE APP IS PROVIDED \"AS IS\" AND \"AS AVAILABLE\" WITHOUT WARRANTY OF ANY KIND.\n
+4.2. YOUR USE OF THE APP AND ANY MATERIAL DOWNLOADED OR OTHERWISE OBTAINED THROUGH THE USE OF THE APP IS AT YOUR OWN DISCRETION AND RISK AND YOU ARE SOLELY RESPONSIBLE FOR ANY DAMAGE TO YOUR COMPUTER SYSTEM OR OTHER DEVICE OR LOSS OF DATA THAT RESULTS FROM SUCH USE.\n
+4.3. DEVELOPER FURTHER EXPRESSLY DISCLAIMS ALL WARRANTIES AND CONDITIONS OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY, FITNESS FOR PARTICULAR PURPOSE AND NON-INFRINGEMENT.\n
+ <b>5. LIMITATION OF LIABILITY</b>\n
+5.1. YOU EXPRESSLY UNDERSTAND AND AGREE THAT DEVELOPER SHALL NOT BE LIABLE TO YOU UNDER ANY THEORY OF LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL CONSEQUENTIAL OR EXEMPLARY DAMAGES THAT MAY BE INCURRED BY YOU, INCLUDING ANY LOSS OF DATA, WHETHER OR NOT DEVELOPER HAS BEEN ADVISED OF OR SHOULD HAS BEEM AWARE OF THE POSSIBILITY OF ANY SUCH LOSSES ARISING.\n
+ <b>6. Indemnification</b>\n
+6.1. To the maximum extent permitted by law, you agree to defend, indemnify and hold harmless Developer from and against any and all third party claims, actions, suits of proceedings, as well as any and all losses, liabilities, damages, costs and expenses (including reasonable attorneys fees) arising out of or accruing from (a) your use of the App in violation of this Agreement, and (b) your use of the App that infringes any copyright or other intellectual property right of any person.\n
+ <b>7. General Legal Terms</b>\n
+7.1. This Agreement constitutes the whole legal agreement between you and Developer and governs your use of the App, and completely replaces any prior agreements between you and Developer in relation to the App.\n
+7.2. You agree that if Developer does not exercise or enforce any legal right or remedy which is contained in this Agreement (or which Developer has the benefit of under any applicable law), this will not be taker to be a formal waiver of Developer\'s rights and that those rights or remedies will still be available to Developer.\n
+7.3. If any court of law, having the jurisdiction to decide on this matter, rules that any provision of this Agreement is invalid, then that provision will be removed from this Agreement without affecting the rest of this Agreement. The remaining provision of this Agreement will continue to be valid and enforceable.\n
+7.4. The rights granted in this Agreement nay not be assigned or transferred by you without the prior written approval of Developer. You will not be permitted to delegate your responsibility or obligations under this Agreement without the prior written approval of Developer.\n
+7.5. All claims arising out of or relating to this Agreement or your relationship with Developer under this Agreement, shall be governed by the laws of Russian Federation excluding conflict of laws provisions. You further agree to submit to the exclusive jurisdiction of the courts located within the city of Tomsk, Tomsk Oblast to resolve any legal matter arising from or relating to this Agreement or your relationship with Developer under this Agreement, except that you agree that Developer shall be allowed to apply for injunctive relief in any jurisdiction.
+</string>
+</resources>

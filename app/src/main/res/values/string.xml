@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">vk a sync</string>
+    
+    <string name="album" translatable="false">@string/app_name</string>
+
+    <string name="download_notification_title" translatable="false">%s – %s</string>
+    <string name="download_notification_description">Tap to cancel</string>
+    
+    <string name="perform_title">Synchronize</string>
+    <string name="perform_summary">Perform selected actions</string>
+    
+    <string name="my_audios">My audios</string>
+    <string name="cloud_switch_title">Download</string>
+    <string name="cloud_switch_summary_on">Download new audios</string>
+    <string name="cloud_switch_summary_off">Don\'t download</string>
+    <string name="local_switch_title">Delete</string>
+    <string name="local_switch_summary_on">Delete removed audios</string>
+    <string name="local_switch_summary_off">Don\'t delete</string>
+    
+    <string name="local_cache">Local cache</string>
+    <string name="cache_switch_title">Copy</string>
+    <string name="cache_switch_summary_on">Copy when possible</string>
+    <string name="cache_switch_summary_off">Ignore local cache</string>
+    <string name="clean_switch_title">Delete</string>
+    <string name="clean_switch_summary_on">Delete copies from cache</string>
+    <string name="clean_switch_summary_off">Don\'t delete from cache</string>
+    <string name="cache_folder_title">Cache location</string>
+
+    <string name="local_storage">Local storage</string>
+    <string name="local_folder_size_title">Size</string>
+    <string name="local_folder_title">Location</string>
+    <string name="clear_title">Clear</string>
+    <string name="clear_summary">Delete all the audios</string>
+    <string name="clear_dialog_message">Folder _ will be deleted</string>
+    <string name="clean_dialog_message">Folder _ doesn\'t exists</string>
+    
+   	<string name="vk_account">VK account</string>
+   	<string name="token_title_in">Log in</string>
+   	<string name="token_title_out">Log out</string>
+    
+    <string name="app_about">Application</string>
+    <string name="web_title">Website</string>
+    <string name="web_url" translatable="false">http://vkasync.jikopster.org</string>
+	<string name="eula_title">User agreement</string>
+	    <string name="eula_accept">Accept</string>
+
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fail">ОШИБКА</string>
+    <string name="done">ГОТОВО</string>
+
+    <string name="error_count">Всего ошибок: %d</string>
+</resources>

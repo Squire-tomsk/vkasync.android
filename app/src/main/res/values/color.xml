@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="done">#ff009900</color>
+    <color name="warn">#ff996600</color>
+    <color name="fail">#ff990000</color>
+</resources>

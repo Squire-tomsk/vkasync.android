@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="size_entries">
+        <item>Unlimited</item>
+        <item>10 files</item>
+        <item>50 files</item>
+        <item>100 files</item>
+        <item>150 files</item>
+        <item>200 files</item>
+    </string-array>
+
+    <string-array name="size_entry_values" translatable="false">
+        <item>0</item>
+        <item>10</item>
+        <item>50</item>
+        <item>100</item>
+        <item>150</item>
+        <item>200</item>
+    </string-array>
+    <string name="size_default" translatable="false">0</string>
+</resources>
