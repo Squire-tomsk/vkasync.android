@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Jikopster Orglobster.
+ * Copyright (c) 2014-2016 Jikopster Orglobster.
  *
  * This file is part of Jikopster vk a sync
  *
