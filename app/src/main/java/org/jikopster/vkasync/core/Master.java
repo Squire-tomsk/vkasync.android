@@ -100,8 +100,10 @@ public class Master {
     public static void check(TrackList tracks, Iterable<Worker.Checker> checkers, Listener listener)
     {
         ArrayList<AsyncTask> tasks = new ArrayList<>();
-        for (Worker.Checker checker : checkers)
-            ((ASyncTask) (() -> checker.check(tracks))).execute(tasks, listener);
+        for (Worker.Checker checker : checkers) {
+            ASyncTask task = () -> checker.check(tracks);
+            task.execute(tasks, listener);
+        }
     }
 
 	public static void process(Iterable<Track> tracks, Iterable<Worker.Processor> processors, Listener listener)
