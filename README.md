@@ -1,6 +1,6 @@
-# [Jikopster vk a sync] (http://vkasync.jikopster.org)
+# [vk audio sync by Jikopster] (http://vkasync.jikopster.org)
 
-Jikopster vk a sync is an Android app (<http://vkasync.jikopster.org>).
+vk audio sync app for Android (<http://vkasync.jikopster.org>).
 
 # Copyright and license
 
