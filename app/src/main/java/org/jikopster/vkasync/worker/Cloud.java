@@ -86,7 +86,8 @@ public class Cloud extends Worker
                         String id = json.getString("owner_id") + "_" + json.getString("id");
 
                         Track track = mTrackList.get(id).set(FLAG);
-                        track.url = json.getString("url").replaceFirst("https://", "http://");
+                        if (json.has("url"))
+                            track.url = json.getString("url").replaceFirst("https://", "http://");
 
                         if (track.setArtist(json.getString("artist"), true))
                             track.set(Media.UPDATE);
@@ -159,7 +160,7 @@ public class Cloud extends Worker
         }
 
         /**
-         * A {@link Track} that has either {@link Local#FLAG} or {Cache#FLAG} set,
+         * If a {@link Track} has either {@link Local#FLAG} or {Cache#FLAG} set,
          * it will be skipped. Because of that, don't run {@link Cache.Checker}
          * until you're gonna run {@link Cache.Processor} too. Otherwise,
          * a {@link Track} won't be neither downloaded nor copied from the cache.
@@ -170,6 +171,7 @@ public class Cloud extends Worker
         public void process(Track track) {
             if (!track.isset(FLAG)) return;
             if ( track.isset(SKIP)) return;
+            if ( track.url == null) return;
 
             long id = mDownMan.enqueue(
                     new Request(Uri.parse(track.url))
@@ -216,9 +218,9 @@ public class Cloud extends Worker
                     String tempUri = cursor.getString(
                             cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                     File src = new File(Uri.parse(tempUri).getPath());
-                    String path = new File(
-                            src.getParent(), tempSupDir + File.separator + track.filename())
-                                                                               .getCanonicalPath();
+                    String path = new File(src.getParent(),
+                            tempSupDir + File.separator + track.filename())
+                                                                       .getCanonicalPath();
                     File dst = new File(path);
                     if (!src.renameTo(dst)) {
                         if (src.delete())
@@ -255,7 +257,7 @@ public class Cloud extends Worker
                     do {
                         long id = cursor.getLong(i);
                         if (null == Track.unserialize(context, id))
-                            return; // to remove our downloads and only
+                            return; // to remove our downloads only
                         dm.remove(id);
                     } while (cursor.moveToNext());
                 }

@@ -63,7 +63,9 @@ public class SingleToast
         if (!TextUtils.isEmpty(message))
             text.append(String.format("%n%s", message));
 
-        int duration = message == null ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG;
+        int duration = message == null
+                ? Toast.LENGTH_SHORT
+                : Toast.LENGTH_LONG;
 
         if (sToast != null)
             sToast.cancel();
