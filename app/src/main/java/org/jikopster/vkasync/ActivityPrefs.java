@@ -48,7 +48,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
-import android.util.Log;
 
 
 public class ActivityPrefs extends PreferenceActivity
@@ -129,7 +128,7 @@ public class ActivityPrefs extends PreferenceActivity
             case DIALOG_CLEAN:
                 return new
                         AlertDialog.Builder(this)
-                        .setPositiveButton(android.R.string.ok, (dialog, which) -> clean())
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> clear())
                         .setNegativeButton(android.R.string.cancel, null)
                         .setMessage("")
                         .create();
@@ -173,7 +172,7 @@ public class ActivityPrefs extends PreferenceActivity
     private void show(SingleToast.State state, String message) {
         SingleToast.show(this, state, message);
     }
-    public void show(SingleToast.State state, Exception e, String text) {
+    private void show(SingleToast.State state, Exception e, String text) {
         String message = Sync.getMessage(this, e);
         if (!TextUtils.isEmpty(text))
             message = String.format("%s%n%s", message, text);
@@ -182,26 +181,22 @@ public class ActivityPrefs extends PreferenceActivity
 
     private void sync() {
         sSyncState.PROGRESS.apply();
-        new Sync(this).sync(new Master.Listener()
+        new Sync(this).sync(new Sync.Listener()
         {
+            private int count;
             @Override
             public void onComplete() {
                 sSyncState.ENABLED.apply();
-                show(
-                        count == 0
-                                ? SingleToast.State.DONE
-                                : SingleToast.State.WARN,
-                        count == 0
-                                ? null
-                                : getString(R.string.error_count, count)
-                );
+                if (count == 0)
+                    show(SingleToast.State.DONE);
+                else
+                    show(SingleToast.State.WARN, getString(R.string.error_count, count));
             }
             @Override
             public void onFail(Exception e) {
                 sSyncState.ENABLED.apply();
                 show(SingleToast.State.FAIL, e, null);
             }
-            private int count;
             @Override
             public void onWarning(Exception e) {
                 count++;
@@ -209,7 +204,7 @@ public class ActivityPrefs extends PreferenceActivity
         });
     }
 
-    private void clean() {
+    private void clear() {
         sCleanState.PROGRESS.apply();
         Clear.clear(this, result -> {
             show(result

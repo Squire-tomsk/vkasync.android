@@ -38,23 +38,7 @@ public class Master {
         Track get(String id);
     }
 
-    public static abstract class Listener implements Action1<Exception>
-    {
-        public void invoke(Exception e) {
-            if (e == null) {
-                onComplete();
-                return;
-            }
-            if (e instanceof FatalException)
-                onFail(e);
-            else
-                onWarning(e);
-        }
-
-        public abstract void onComplete();
-        public abstract void onFail(Exception e);
-        public abstract void onWarning(Exception e);
-    }
+    public interface Listener extends Action1<Exception> { }
 
     private interface ASyncTask
     {

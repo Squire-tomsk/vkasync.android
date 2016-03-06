@@ -21,6 +21,8 @@
 package org.jikopster.vkasync;
 
 import com.vk.sdk.VKSdk;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 public class Application extends android.app.Application
 {
@@ -28,8 +30,9 @@ public class Application extends android.app.Application
 	@Override
 	public void onCreate()
 	{
-		VKSdk.initialize(this);
 		super.onCreate();
+		VKSdk.initialize(this);
+		Fabric.with(this, new Crashlytics());
 	}
 	
 }

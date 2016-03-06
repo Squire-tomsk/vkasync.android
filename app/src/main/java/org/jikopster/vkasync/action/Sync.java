@@ -22,12 +22,10 @@ package org.jikopster.vkasync.action;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
-import org.jikopster.vkasync.R;
+import com.crashlytics.android.Crashlytics;
+
 import org.jikopster.vkasync.core.*;
-import org.jikopster.vkasync.core.Master.*;
 import org.jikopster.vkasync.core.Worker.*;
 import org.jikopster.vkasync.misc.Fucktory;
 import org.jikopster.vkasync.misc.Lambda;
@@ -44,16 +42,33 @@ import java.util.HashMap;
 
 public class Sync
 {
-    public static String getMessage(Context context, Exception e) {
+    public static abstract class Listener implements Master.Listener
+    {
+        public void invoke(Exception e) {
+            if (e == null) {
+                onComplete();
+                return;
+            }
+            Crashlytics.logException(e);
+            if (e instanceof FatalException)
+                onFail(e);
+            else
+                onWarning(e);
+        }
+
+        public abstract void onComplete();
+        public abstract void onFail(Exception e);
+        public abstract void onWarning(Exception e);
+    }
+
+    public static String getMessage(Context context, @NonNull Exception e) {
         int resId = getMessageResId(e);
         return resId == 0
                 ? null
                 : context.getString(resId);
     }
 
-    public static int getMessageResId(@Nullable Exception ex) {
-        if (ex == null)
-            return 0;
+    public static int getMessageResId(@NonNull Exception ex) {
         try {
             throw ex;
         } catch (Exception e) {
@@ -73,7 +88,7 @@ public class Sync
     private final HashMap<String,Track> mTracks = new HashMap<>(100);
 
     public void sync(Listener listener) {
-        class Listener extends Master.Listener
+        class Listener extends Sync.Listener
         {
             Listener(@NonNull Lambda.Action then) {
                 this.then = then;
