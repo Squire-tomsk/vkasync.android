@@ -21,15 +21,23 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 
 
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     signingConfigs {
@@ -44,8 +52,8 @@ android {
         applicationId "org.jikopster.vkasync"
         minSdkVersion 9
         targetSdkVersion 22
-        versionCode 21
-        versionName "1.9.0.21"
+        versionCode 22
+        versionName "1.10.0.22"
     }
     buildTypes {
         release {
@@ -63,4 +71,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.vk:androidsdk:1.6.3'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true;
+    }
 }
