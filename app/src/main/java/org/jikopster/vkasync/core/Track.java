@@ -75,9 +75,7 @@ public final class Track
 	}
 
     public boolean isset(int flag) {
-        synchronized (mFlagsLock) {
-            return (mFlags & flag) != 0;
-        }
+        return (mFlags & flag) != 0;
     }
 
     private boolean set(FieldAdapter<Track,String> field, String value, boolean over) {
@@ -129,7 +127,7 @@ public final class Track
     public ContentValues values() {
         ContentValues v = new ContentValues(file == null ? 4 : 5);
         if (file != null)
-            v.put(MediaStore.Audio.Media.DATA, file.getAbsolutePath());
+            v.put(MediaStore.Audio.Media.DATA, file.getPath());
         v.put(MediaStore.Audio.Media.ALBUM, "");
         v.put(MediaStore.Audio.Media.ARTIST, mArtist);
         v.put(MediaStore.Audio.Media.TITLE, mTitle);
