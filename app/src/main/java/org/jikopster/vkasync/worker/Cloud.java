@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
@@ -37,14 +36,12 @@ import com.vk.sdk.api.VKResponse;
 import org.jikopster.vkasync.R;
 import org.jikopster.vkasync.core.*;
 import org.jikopster.vkasync.core.Master.TrackList;
-import org.jikopster.vkasync.preference.Path;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 
 public class Cloud extends Worker
 {

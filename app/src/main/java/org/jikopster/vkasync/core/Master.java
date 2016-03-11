@@ -22,8 +22,6 @@ package org.jikopster.vkasync.core;
 
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Looper;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
