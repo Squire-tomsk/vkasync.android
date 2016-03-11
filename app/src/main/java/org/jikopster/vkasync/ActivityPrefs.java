@@ -26,6 +26,7 @@ import org.jikopster.vkasync.action.Clear;
 import org.jikopster.vkasync.action.Sync;
 import org.jikopster.vkasync.action.VK;
 import org.jikopster.vkasync.core.*;
+import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.preference.Path;
 import org.jikopster.vkasync.ui.SingleToast;
 

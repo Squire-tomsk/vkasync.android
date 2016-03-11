@@ -15,9 +15,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Jikopster vk a sync.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 package org.jikopster.vkasync.core;
 
-public interface FatalException { }
+
+public abstract class Exception extends Throwable
+{
+    public interface Fatal { }
+
+    public Exception() { }
+
+    public Exception(Throwable cause) {
+        super(cause);
+    }
+}
