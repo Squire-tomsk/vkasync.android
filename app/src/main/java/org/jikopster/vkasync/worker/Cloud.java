@@ -235,7 +235,7 @@ public class Cloud extends Worker
                             new Media.ContentHelper(context, path);
                     helper.upsert(track);
                 } catch (IOException|Exception e) {
-                    Crashlytics.logException(e);
+                    Exception.log(e);
                 }
             }
         }

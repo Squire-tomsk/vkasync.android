@@ -19,10 +19,16 @@
 
 package org.jikopster.vkasync.core;
 
+import com.crashlytics.android.Crashlytics;
 
 public abstract class Exception extends Throwable
 {
     public interface Fatal { }
+
+    public static void log(Throwable throwable) {
+        Crashlytics.logException(throwable);
+        throwable.printStackTrace();
+    }
 
     public Exception() { }
 

@@ -50,6 +50,7 @@ public class Master {
                         ASyncTask.this.doInBackground();
                         return null;
                     } catch (Exception e) {
+                        Exception.log(e);
                         return e;
                     }
                 }

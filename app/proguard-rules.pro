@@ -15,4 +15,10 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# retrolambda
 -dontwarn java.lang.invoke.*
+
+# Crashlytics
+-keepattributes SourceFile,LineNumberTable,*Annotation*
+-keep public class * extends java.lang.Throwable
