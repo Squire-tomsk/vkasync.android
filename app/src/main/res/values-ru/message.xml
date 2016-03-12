@@ -23,5 +23,5 @@
     <string name="fail">ОШИБКА</string>
     <string name="done">ГОТОВО</string>
 
-    <string name="error_count">Всего ошибок: %d</string>
+    <string name="error_count">Ошибок: %d</string>
 </resources>
