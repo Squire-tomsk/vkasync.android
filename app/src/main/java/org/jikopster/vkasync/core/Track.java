@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 
 import static org.jikopster.vkasync.misc.Lambda.*;
 
-public final class Track
+public class Track
 {
     private static class Field extends FieldAdapter<Track,String> {
         Field(Function1<Track,String> getter, Function2<Track,String,String> setter) {

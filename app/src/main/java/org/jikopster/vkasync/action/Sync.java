@@ -21,6 +21,8 @@
 package org.jikopster.vkasync.action;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
@@ -28,7 +30,7 @@ import com.crashlytics.android.Crashlytics;
 import org.jikopster.vkasync.core.*;
 import org.jikopster.vkasync.core.Worker.*;
 import org.jikopster.vkasync.misc.Fucktory;
-import org.jikopster.vkasync.misc.Lambda;
+import static org.jikopster.vkasync.misc.Lambda.*;
 import org.jikopster.vkasync.preference.Bool;
 import org.jikopster.vkasync.preference.Path;
 import org.jikopster.vkasync.preference.Size;
@@ -39,11 +41,28 @@ import org.jikopster.vkasync.worker.Media;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Sync
 {
     public static abstract class Listener implements Master.Listener
     {
+        public Listener() {
+            mMethods.put(Cloud.FLAG, this::onCloud);
+            mMethods.put(Local.FLAG, this::onLocal);
+            mMethods.put(Cache.FLAG, this::onCache);
+        }
+
+        private HashMap<Integer, Runnable> mMethods = new HashMap<>(3);
+
+        private Handler mHandler = new Handler(Looper.getMainLooper());
+
+        protected void onFlag(int flag) {
+            for (Map.Entry<Integer, Runnable> e : mMethods.entrySet())
+                if (0 < (e.getKey() & flag))
+                    mHandler.post(e.getValue());
+        }
+
         public void invoke(Exception e) {
             if (e == null) {
                 onComplete();
@@ -59,6 +78,26 @@ public class Sync
         public abstract void onComplete();
         public abstract void onFail(Exception e);
         public abstract void onWarning(Exception e);
+
+        public void onCloud() { }
+        public void onLocal() { }
+        public void onCache() { }
+    }
+
+    class Track extends org.jikopster.vkasync.core.Track
+    {
+        public Track(String id, @NonNull Action1<Integer> listener) {
+            super(id);
+            mListener = listener;
+        }
+
+        private final Action1<Integer> mListener;
+
+        public Track set(int flag) {
+            super.set(flag);
+            mListener.invoke(flag);
+            return this;
+        }
     }
 
     public static String getMessage(Context context, @NonNull Exception e) {
@@ -83,18 +122,23 @@ public class Sync
     }
 
     private final Context mContext;
+
     private final String mLocalPath;
     private final String mCachePath;
     private final HashMap<String,Track> mTracks = new HashMap<>(100);
-
     public void sync(Listener listener) {
         class Listener extends Sync.Listener
         {
-            Listener(@NonNull Lambda.Action then) {
+            Listener(@NonNull Action then) {
                 this.then = then;
             }
 
-            private final Lambda.Action then;
+            private final Action then;
+
+            @Override
+            protected void onFlag(int flag) {
+                listener.onFlag(flag);
+            }
 
             @Override
             public void onComplete() {
@@ -132,7 +176,7 @@ public class Sync
                     Track track;
                     synchronized (mTracks) {
                         if (null == (track = mTracks.get(id)))
-                            mTracks.put(id, (track = new Track(id)));
+                            mTracks.put(id, track = new Track(id, listener::onFlag));
                     }
                     return track;
                 },

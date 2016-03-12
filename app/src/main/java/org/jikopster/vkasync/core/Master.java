@@ -88,7 +88,7 @@ public class Master {
         }
     }
 
-	public static void process(Iterable<Track> tracks, Iterable<Worker.Processor> processors, Listener listener)
+	public static void process(Iterable<? extends Track> tracks, Iterable<Worker.Processor> processors, Listener listener)
     {
         for (Processor processor : processors) {
             try {
