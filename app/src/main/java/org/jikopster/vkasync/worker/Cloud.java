@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.crashlytics.android.Crashlytics;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
@@ -35,6 +36,7 @@ import com.vk.sdk.api.VKResponse;
 
 import org.jikopster.vkasync.R;
 import org.jikopster.vkasync.core.*;
+import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Master.TrackList;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,13 +51,13 @@ public class Cloud extends Worker
 
     public static class Checker implements Worker.Checker
     {
-        public class JsonException extends Exception implements FatalException {
+        public class JsonException extends Exception implements Exception.Fatal {
             JsonException(JSONException e) {
                 super(e);
             }
         }
 
-        public class VkErrorException extends Exception implements FatalException { }
+        public class VkErrorException extends Exception implements Exception.Fatal { }
 
         private class Listener extends VKRequest.VKRequestListener
         {
@@ -125,7 +127,7 @@ public class Cloud extends Worker
 
     public static class Processor implements Worker.Processor
     {
-        public class CantCreateTempDirException extends Exception implements FatalException { }
+        public class CantCreateTempDirException extends Exception implements Exception.Fatal { }
         public class NomediaCreationIOException extends Exception { }
 
         public Processor(Context context, String localPath) {
@@ -232,7 +234,8 @@ public class Cloud extends Worker
                     Media.ContentHelper helper =
                             new Media.ContentHelper(context, path);
                     helper.upsert(track);
-                } catch (Exception e) {
+                } catch (IOException|Exception e) {
+                    Exception.log(e);
                 }
             }
         }

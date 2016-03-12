@@ -15,9 +15,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Jikopster vk a sync.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 package org.jikopster.vkasync.core;
 
-public interface FatalException { }
+import com.crashlytics.android.Crashlytics;
+
+public abstract class Exception extends Throwable
+{
+    public interface Fatal { }
+
+    public static void log(Throwable throwable) {
+        Crashlytics.logException(throwable);
+        throwable.printStackTrace();
+    }
+
+    public Exception() { }
+
+    public Exception(Throwable cause) {
+        super(cause);
+    }
+}

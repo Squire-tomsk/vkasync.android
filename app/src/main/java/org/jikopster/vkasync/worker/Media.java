@@ -30,6 +30,7 @@ import android.support.annotation.NonNull;
 import static android.provider.MediaStore.Audio.Media.*;
 
 import org.jikopster.vkasync.core.*;
+import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Master.*;
 
 
@@ -41,7 +42,7 @@ public class Media extends Worker
 
     public static class ContentHelper
     {
-        public class NullCursorException extends Exception implements FatalException { }
+        public class NullCursorException extends Exception implements Exception.Fatal { }
         public class InsertException extends Exception { }
         public class DeleteException extends Exception { }
         public class UpdateException extends Exception { }

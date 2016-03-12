@@ -50,6 +50,7 @@ public class Master {
                         ASyncTask.this.doInBackground();
                         return null;
                     } catch (Exception e) {
+                        Exception.log(e);
                         return e;
                     }
                 }
@@ -58,7 +59,7 @@ public class Master {
                 protected void onPostExecute(Exception e) {
                     if (!mates.remove(this)) return;
                     if (e != null) {
-                        if (e instanceof FatalException) {
+                        if (e instanceof Exception.Fatal) {
                             for (int i = mates.size(); 0 < i--; )
                                 mates.get(i).cancel(true);
                             mates.clear();
@@ -95,7 +96,7 @@ public class Master {
                 processor.prepare();
             } catch (Exception e) {
                 listener.invoke(e);
-                if (e instanceof FatalException)
+                if (e instanceof Exception.Fatal)
                     return;
             }
         }
@@ -108,7 +109,7 @@ public class Master {
                     try {
                         processor.process(track);
                     } catch (Exception e) {
-                        if (e instanceof FatalException)
+                        if (e instanceof Exception.Fatal)
                             throw e;
                         else
                             me.add(e);
