@@ -50,7 +50,6 @@ public class Sync
                 onComplete();
                 return;
             }
-            Crashlytics.logException(e);
             if (e instanceof Exception.Fatal)
                 onFail(e);
             else
