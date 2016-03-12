@@ -44,6 +44,7 @@ public class Local extends Worker
             File[] files = mDir.listFiles();
             if (files != null)
                 for (File file : files) {
+                    if (!file.isFile()) continue;
                     String id = Track.idFromFilename(file.getName());
                     if (id == null) continue;
                     tracks.get(id).set(FLAG).file = file;
