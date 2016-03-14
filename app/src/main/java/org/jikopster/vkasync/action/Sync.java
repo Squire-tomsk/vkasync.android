@@ -25,9 +25,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
-import com.crashlytics.android.Crashlytics;
-
 import org.jikopster.vkasync.core.*;
+import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Worker.*;
 import org.jikopster.vkasync.misc.Fucktory;
 import static org.jikopster.vkasync.misc.Lambda.*;
@@ -68,8 +67,7 @@ public class Sync
                 onComplete();
                 return;
             }
-            Crashlytics.logException(e);
-            if (e instanceof FatalException)
+            if (e instanceof Exception.Fatal)
                 onFail(e);
             else
                 onWarning(e);

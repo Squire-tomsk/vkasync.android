@@ -23,6 +23,7 @@ package org.jikopster.vkasync.worker;
 import android.content.Context;
 
 import org.jikopster.vkasync.core.*;
+import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Master.TrackList;
 
 import java.io.File;

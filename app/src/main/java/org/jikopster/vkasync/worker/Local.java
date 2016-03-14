@@ -25,6 +25,7 @@ import android.content.Context;
 import java.io.File;
 
 import org.jikopster.vkasync.core.*;
+import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Master.TrackList;
 
 public class Local extends Worker
@@ -55,7 +56,7 @@ public class Local extends Worker
     public static class Processor implements Worker.Processor
     {
         public class LocalFileNotFoundException extends Exception { }
-        public class CantDeleteLocalFileException extends Exception implements FatalException { }
+        public class CantDeleteLocalFileException extends Exception implements Exception.Fatal { }
 
         public Processor(Context context, String localPath) {
             mMediaHelper = new Media.ContentHelper(context, localPath);
