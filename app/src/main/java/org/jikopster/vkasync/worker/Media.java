@@ -148,7 +148,7 @@ public class Media extends Worker
         @Override
         public void process(Track track) throws UpdateException, InsertException {
             if (!track.isset(Local.FLAG)) return;
-            if (track.isset(UPDATE)) {
+            if ( track.isset(Cloud.FLAG) && track.isset(UPDATE)) {
                 update(track);
                 return;
             }
