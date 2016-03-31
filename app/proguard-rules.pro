@@ -21,4 +21,4 @@
 
 # Crashlytics
 -keepattributes SourceFile,LineNumberTable,*Annotation*
--keep public class * extends java.lang.Throwable
+-keep public class * extends org.jikopster.vkasync.core.Exception
