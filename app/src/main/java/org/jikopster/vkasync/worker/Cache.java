@@ -66,7 +66,7 @@ public class Cache extends Worker
 
 
         public Processor(Context context, File cacheDir, File localDir, boolean clean) {
-            mMediaHelper = new Media.ContentHelper(context, localDir.getAbsolutePath());
+            mMediaHelper = new Media.ContentHelper(context, localDir.getPath());
             mCacheDir = cacheDir;
             mLocalDir = localDir;
             mClean = clean;
@@ -87,14 +87,13 @@ public class Cache extends Worker
         }
 
         @Override
-        public void process(Track track) throws
-                Exception {
+        public void process(Track track) throws Exception {
             if (!track.isset(FLAG)) return;
             if ( track.isset(Local.FLAG)) return;
             if (!track.isset(Cloud.FLAG)) return;
 
             File fIn  = new File(mCacheDir, track.getID());
-            File fOut = new File(mLocalDir, track.filename());
+            File fOut = new File(mLocalDir, track.filename(mLocalDir.getPath().length()));
 
             MultiException me = new MultiException();
 

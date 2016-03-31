@@ -116,12 +116,26 @@ public final class Track
 
     static final Pattern PATTERN_FILENAME = Pattern.compile("[?:\"*/|\\<>]");
 
-    public String filename() {
+    static final int MAX_FILENAME = 127;
+
+    public String filename(int pathLength) {
         String Artist = PATTERN_FILENAME.matcher(mArtist).replaceAll("");
         String Title  = PATTERN_FILENAME.matcher(mTitle ).replaceAll("");
         String dash = mArtist.isEmpty() || mTitle.isEmpty() ? "" : " - ";
         String dot  = mArtist.isEmpty() && mTitle.isEmpty() ? "" :  "." ;
-        return String.format("%s%s%s%s%s", Artist, dash, Title, dot, filenameById(mID));
+
+        String name = Artist + dash + Title;
+        String suffix = filenameById(mID);
+        int restLength = MAX_FILENAME - pathLength - suffix.length() - dot.length();
+        if (restLength < 1)
+            return suffix;
+        if (restLength < name.length())
+            name = name.substring(0, restLength);
+        return name + dot + suffix;
+    }
+
+    public String filename(String path) {
+        return new File(path, filename(path.length())).getPath();
     }
 
     public ContentValues values() {

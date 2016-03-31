@@ -217,9 +217,8 @@ public class Cloud extends Worker
                     String tempUri = cursor.getString(
                             cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                     File src = new File(Uri.parse(tempUri).getPath());
-                    String path = new File(src.getParent(),
-                            tempSupDir + File.separator + track.filename())
-                                                                       .getCanonicalPath();
+                    String path = track.filename(
+                                        new File(src.getParent(), tempSupDir).getCanonicalPath());
                     File dst = new File(path);
                     if (!src.renameTo(dst)) {
                         if (src.delete())
