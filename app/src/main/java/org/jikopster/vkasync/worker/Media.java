@@ -61,7 +61,7 @@ public class Media extends Worker
             return whereById(path, "");
         }
         public static String whereById(String path, String id) {
-            return DATA + " LIKE '" + path + "%" + Track.filenameById(id) + "'";
+            return DATA + " LIKE '" + path.replace("'", "\\'") + "%" + Track.filenameById(id) + "'";
         }
 
         public ContentHelper(Context context, String localPath) {
@@ -79,15 +79,24 @@ public class Media extends Worker
                 TITLE,
                 DATA
         };
+
+        private String where() { return where(""); }
+        private String where(String id) {
+            return whereById(mLocalPath, id);
+        }
         @NonNull
-        public Cursor query() throws NullCursorException {
-            Cursor cursor = mCoRe.query(mLocalUri, projectionQuery, whereByPath(mLocalPath), null, null);
+        public Cursor query(String[] projection, String id) throws NullCursorException {
+            Cursor cursor = mCoRe.query(mLocalUri, projection, where(id), null, null);
             if (cursor == null)
                 throw new NullCursorException();
             return cursor;
         }
+        @NonNull
+        public Cursor query() throws NullCursorException {
+            return query(projectionQuery, "");
+        }
         public void delete(@NonNull Track track) throws DeleteException {
-            if (0 == mCoRe.delete(mLocalUri, whereById(mLocalPath, track.getID()), null))
+            if (0 == mCoRe.delete(mLocalUri, where(track.getID()), null))
                     throw new DeleteException();
         }
         public void insert(@NonNull Track track) throws InsertException {
@@ -95,16 +104,12 @@ public class Media extends Worker
                 throw new InsertException();
         }
         public void update(@NonNull Track track) throws UpdateException {
-            if (0 == mCoRe.update(mLocalUri, track.values(), whereById(mLocalPath, track.getID()), null))
+            if (0 == mCoRe.update(mLocalUri, track.values(), where(track.getID()), null))
                 throw new UpdateException();
         }
         private static final String[] projectionUpsert = new String[] { BaseColumns._ID };
         public void upsert(@NonNull Track track) throws UpsertException {
-            try (Cursor cursor = mCoRe.query(
-                    mLocalUri, projectionUpsert, whereById(mLocalPath, track.getID()), null, null))
-            {
-                if (cursor == null)
-                    throw new NullCursorException();
+            try (Cursor cursor = query(projectionUpsert, track.getID())) {
                 if (cursor.moveToFirst())
                     update(track);
                 else

@@ -28,7 +28,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.crashlytics.android.Crashlytics;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
@@ -207,7 +206,6 @@ public class Cloud extends Worker
                     Track track = Track.deserialize(context, id);
                     if (track == null) return;
 
-
                     int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                     if (status == DownloadManager.STATUS_FAILED) {
                         dm.remove(id);
@@ -217,17 +215,14 @@ public class Cloud extends Worker
                     String tempUri = cursor.getString(
                             cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                     File src = new File(Uri.parse(tempUri).getPath());
-                    String path = track.filename(
-                                        new File(src.getParent(), tempSupDir).getCanonicalPath());
-                    File dst = new File(path);
+                    String path = new File(src.getParent(), tempSupDir).getCanonicalPath();
+                    File dst = new File(track.filename(path));
                     if (!src.renameTo(dst)) {
-                        if (src.delete())
-                            throw new CantRenameTempFileException();
-                        else
-                            new MultiException()
-                                    .add(new CantRenameTempFileException())
-                                    .add(new CantDeleteTempFileException())
-                                    .throwIfNotEmpty();
+                        throw src.delete()
+                                ? new CantRenameTempFileException()
+                                : new MultiException()
+                                        .add(new CantRenameTempFileException())
+                                        .add(new CantDeleteTempFileException());
                     }
                     track.file = dst;
                     Media.ContentHelper helper =
