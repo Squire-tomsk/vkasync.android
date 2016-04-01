@@ -227,9 +227,7 @@ public class Cloud extends Worker
                                         .add(new CantDeleteTempFileException());
                     }
                     track.file = dst;
-                    ContentHelper helper =
-                            new ContentHelper(context, path);
-                    helper.upsert(track);
+                    new ContentHelper(context, path).upsert(track);
                 } catch (IOException|Exception e) {
                     Exception.log(e);
                 }
