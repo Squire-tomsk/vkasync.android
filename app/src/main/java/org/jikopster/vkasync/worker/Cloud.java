@@ -204,7 +204,7 @@ public class Cloud extends Worker
                 try (Cursor cursor = dm.query(new DownloadManager.Query().setFilterById(id))) {
                     if (!cursor.moveToFirst()) return;
 
-                    Track track = Track.unserialize(context, id);
+                    Track track = Track.deserialize(context, id);
                     if (track == null) return;
 
 
@@ -255,7 +255,7 @@ public class Cloud extends Worker
                     int i = cursor.getColumnIndex(DownloadManager.COLUMN_ID);
                     do {
                         long id = cursor.getLong(i);
-                        if (null == Track.unserialize(context, id))
+                        if (null == Track.deserialize(context, id))
                             return; // to remove our downloads only
                         dm.remove(id);
                     } while (cursor.moveToNext());

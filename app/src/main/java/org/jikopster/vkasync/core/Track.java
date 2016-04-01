@@ -166,7 +166,7 @@ public final class Track
     }
 
     @Nullable
-    public static Track unserialize(Context context, long id)
+    public static Track deserialize(Context context, long id)
     {
         KeyBuilder kb = new KeyBuilder(id);
         SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(context);
