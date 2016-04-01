@@ -22,9 +22,11 @@ package org.jikopster.vkasync.worker;
 
 import android.content.Context;
 
-import org.jikopster.vkasync.core.*;
 import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Master.TrackList;
+import org.jikopster.vkasync.core.MultiException;
+import org.jikopster.vkasync.core.Track;
+import org.jikopster.vkasync.core.Worker;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,7 +68,7 @@ public class Cache extends Worker
 
 
         public Processor(Context context, File cacheDir, File localDir, boolean clean) {
-            mMediaHelper = new Media.ContentHelper(context, localDir.getPath());
+            mHelper = new ContentHelper(context, localDir.getPath());
             mCacheDir = cacheDir;
             mLocalDir = localDir;
             mClean = clean;
@@ -75,7 +77,7 @@ public class Cache extends Worker
         private File mCacheDir;
         private File mLocalDir;
 
-        private final Media.ContentHelper mMediaHelper;
+        private final ContentHelper mHelper;
 
         private boolean mClean;
 
@@ -103,10 +105,10 @@ public class Cache extends Worker
                 .getChannel()
                 .transferTo(0, is.getChannel().size(), os.getChannel());
                 track.file = fOut;
-                mMediaHelper.upsert(track);
+                mHelper.upsert(track);
             } catch (IOException e) {
                 throw new FileNotCopiedException(e);
-            } catch (Media.ContentHelper.UpsertException e) {
+            } catch (ContentHelper.UpsertException e) {
                 me.add(e);
             }
 

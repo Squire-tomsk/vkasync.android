@@ -24,9 +24,10 @@ import android.content.Context;
 
 import java.io.File;
 
-import org.jikopster.vkasync.core.*;
 import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Master.TrackList;
+import org.jikopster.vkasync.core.Track;
+import org.jikopster.vkasync.core.Worker;
 
 public class Local extends Worker
 {
@@ -59,10 +60,10 @@ public class Local extends Worker
         public class CantDeleteLocalFileException extends Exception implements Exception.Fatal { }
 
         public Processor(Context context, String localPath) {
-            mMediaHelper = new Media.ContentHelper(context, localPath);
+            mHelper = new ContentHelper(context, localPath);
         }
 
-        private final Media.ContentHelper mMediaHelper;
+        private final ContentHelper mHelper;
 
         public static final int SKIP = Cloud.FLAG;
 
@@ -71,7 +72,7 @@ public class Local extends Worker
                                         throws
                                         LocalFileNotFoundException,
                                         CantDeleteLocalFileException,
-                Media.ContentHelper.DeleteException
+                                        ContentHelper.DeleteException
         {
             if (!track.isset(FLAG)) return;
             if ( track.isset(SKIP)) return;
@@ -81,7 +82,7 @@ public class Local extends Worker
             if (!track.file.delete())
                 throw new CantDeleteLocalFileException();
 
-            mMediaHelper.delete(track);
+            mHelper.delete(track);
         }
     }
 

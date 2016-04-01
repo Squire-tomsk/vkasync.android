@@ -34,9 +34,11 @@ import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 
 import org.jikopster.vkasync.R;
-import org.jikopster.vkasync.core.*;
 import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Master.TrackList;
+import org.jikopster.vkasync.core.MultiException;
+import org.jikopster.vkasync.core.Track;
+import org.jikopster.vkasync.core.Worker;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -225,8 +227,8 @@ public class Cloud extends Worker
                                         .add(new CantDeleteTempFileException());
                     }
                     track.file = dst;
-                    Media.ContentHelper helper =
-                            new Media.ContentHelper(context, path);
+                    ContentHelper helper =
+                            new ContentHelper(context, path);
                     helper.upsert(track);
                 } catch (IOException|Exception e) {
                     Exception.log(e);

@@ -26,10 +26,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 
-import org.jikopster.vkasync.core.Track;
 import org.jikopster.vkasync.misc.Lambda;
 import org.jikopster.vkasync.preference.Path;
-import org.jikopster.vkasync.worker.Media;
+import org.jikopster.vkasync.worker.ContentHelper;
 
 import java.io.File;
 
@@ -53,7 +52,7 @@ public class Clear
             @Override
             protected Boolean doInBackground(Void... params) {
                 boolean result = delete(mDir);
-                mCoRe.delete(mUri, Media.ContentHelper.whereByPath(mPath), null);
+                mCoRe.delete(mUri, ContentHelper.whereByPath(mPath), null);
                 return result;
             }
 
