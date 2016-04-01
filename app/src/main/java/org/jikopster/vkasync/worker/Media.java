@@ -74,11 +74,8 @@ public class Media extends Worker
         private final Uri mLocalUri;
         private final String mLocalPath;
 
-        private static final String[] projectionQuery = {
-                ARTIST,
-                TITLE,
-                DATA
-        };
+        private static final String[] projectionQuery  = { ARTIST, TITLE, DATA };
+        private static final String[] projectionUpsert = { BaseColumns._ID };
 
         private String where() { return where(""); }
         private String where(String id) {
@@ -107,14 +104,13 @@ public class Media extends Worker
             if (0 == mCoRe.update(mLocalUri, track.values(), where(track.getID()), null))
                 throw new UpdateException();
         }
-        private static final String[] projectionUpsert = new String[] { BaseColumns._ID };
         public void upsert(@NonNull Track track) throws UpsertException {
             try (Cursor cursor = query(projectionUpsert, track.getID())) {
                 if (cursor.moveToFirst())
                     update(track);
                 else
                     insert(track);
-            } catch (NullCursorException|UpdateException |InsertException e) {
+            } catch (NullCursorException|UpdateException|InsertException e) {
                 throw new UpsertException(e);
             }
         }
