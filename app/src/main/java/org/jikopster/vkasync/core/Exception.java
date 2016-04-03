@@ -50,16 +50,23 @@ public class Exception extends Throwable
         public boolean isFatal() { return true; }
     }
 
-    public static class Multi extends Exception {
+    public static class Multi extends Exception
+    {
+        private boolean fatal;
+
+        @Override
+        public boolean isFatal() { return fatal; }
+
         private List<Exception> list = new ArrayList<>();
 
         public Multi add(Exception e) {
             list.add(e);
+            fatal |= e.isFatal();
             return this;
         }
 
         @Override
-        public void notify(Listener listener) {
+        protected void notify(Listener listener) {
             for (Exception e : list)
                 e.notify(listener);
         }
@@ -82,10 +89,13 @@ public class Exception extends Throwable
     }
 
     static void notify(@Nullable Exception e, @NonNull Listener listener) {
-        if (e == null)
+        if (e == null) {
             listener.done();
-        else
-            e.notify(listener);
+            return;
+        }
+        e.notify(listener);
+        if (!e.isFatal())
+            listener.done();
     }
 
 
@@ -98,11 +108,9 @@ public class Exception extends Throwable
 
     public boolean isFatal() { return false; }
 
-    public void log() {
-        log(this);
-    }
+    public void log() { log(this); }
 
-    public void notify(Listener listener) {
+    protected void notify(Listener listener) {
         if (isFatal())
             listener.fail(this);
         else
