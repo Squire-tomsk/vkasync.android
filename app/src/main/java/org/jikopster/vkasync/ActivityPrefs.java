@@ -193,12 +193,12 @@ public class ActivityPrefs extends PreferenceActivity
                     show(SingleToast.State.WARN, getString(R.string.error_count, count));
             }
             @Override
-            public void fail(Exception e) {
+            public void fail(@NonNull Exception e) {
                 sSyncState.ENABLED.apply();
                 show(SingleToast.State.FAIL, e, null);
             }
             @Override
-            public void warn(Exception e) {
+            public void warn(@NonNull Exception e) {
                 count++;
             }
         });

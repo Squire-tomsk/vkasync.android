@@ -34,8 +34,8 @@ public class Exception extends Throwable
 {
     public static abstract class Listener  {
         public abstract void done();
-        public abstract void fail(Exception e);
-        public abstract void warn(Exception e);
+        public abstract void fail(@NonNull Exception e);
+        public abstract void warn(@NonNull Exception e);
     }
 
     public static class Fatal extends Exception

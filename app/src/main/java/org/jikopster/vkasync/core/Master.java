@@ -50,7 +50,7 @@ public class Master {
                 injected.done();
             }
             @Override
-            public void fail(Exception e) {
+            public void fail(@NonNull Exception e) {
                 count = 0;
                 for (int i = mates.size(); 0 < i--; )
                     mates.get(i).cancel(true);

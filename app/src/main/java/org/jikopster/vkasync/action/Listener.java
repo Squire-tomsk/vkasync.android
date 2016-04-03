@@ -38,7 +38,7 @@ public class Listener extends Exception.Listener
         @Override
         public void done() { then.invoke(); }
         @Override
-        public void fail(Exception e) { listener.fail(e); }
+        public void fail(@NonNull Exception e) { listener.fail(e); }
         @Override
-        public void warn(Exception e) { listener.warn(e); }
+        public void warn(@NonNull Exception e) { listener.warn(e); }
 }
