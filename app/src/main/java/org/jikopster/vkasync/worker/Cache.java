@@ -24,7 +24,6 @@ import android.content.Context;
 
 import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Master.TrackList;
-import org.jikopster.vkasync.core.MultiException;
 import org.jikopster.vkasync.core.Track;
 import org.jikopster.vkasync.core.Worker;
 
@@ -97,7 +96,7 @@ public class Cache extends Worker
             File fIn  = new File(mCacheDir, track.getID());
             File fOut = new File(mLocalDir, track.filename(mLocalDir.getPath().length()));
 
-            MultiException me = new MultiException();
+            Exception.Multi me = new Exception.Multi();
 
             try (FileInputStream  is = new FileInputStream (fIn);
                  FileOutputStream os = new FileOutputStream(fOut)) {

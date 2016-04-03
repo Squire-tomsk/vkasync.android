@@ -36,7 +36,6 @@ import com.vk.sdk.api.VKResponse;
 import org.jikopster.vkasync.R;
 import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Master.TrackList;
-import org.jikopster.vkasync.core.MultiException;
 import org.jikopster.vkasync.core.Track;
 import org.jikopster.vkasync.core.Worker;
 import org.json.JSONArray;
@@ -52,13 +51,15 @@ public class Cloud extends Worker
 
     public static class Checker implements Worker.Checker
     {
-        public class JsonException extends Exception implements Exception.Fatal {
+        public class JsonException extends Exception.Fatal {
             JsonException(JSONException e) {
                 super(e);
             }
         }
 
-        public class VkErrorException extends Exception implements Exception.Fatal { }
+        public class VkErrorException extends Exception.Fatal {
+            VkErrorException(VKError error) { super(error.toString()); }
+        }
 
         private class Listener extends VKRequest.VKRequestListener
         {
@@ -101,7 +102,7 @@ public class Cloud extends Worker
 
             @Override
             public void onError(VKError error) {
-                mException = new VkErrorException();
+                mException = new VkErrorException(error);
             }
         }
 
@@ -128,7 +129,7 @@ public class Cloud extends Worker
 
     public static class Processor implements Worker.Processor
     {
-        public class CantCreateTempDirException extends Exception implements Exception.Fatal { }
+        public class CantCreateTempDirException extends Exception.Fatal { }
         public class NomediaCreationIOException extends Exception { }
 
         public Processor(Context context, String localPath) {
@@ -222,7 +223,7 @@ public class Cloud extends Worker
                     if (!src.renameTo(dst)) {
                         throw src.delete()
                                 ? new CantRenameTempFileException()
-                                : new MultiException()
+                                : new Exception.Multi()
                                         .add(new CantRenameTempFileException())
                                         .add(new CantDeleteTempFileException());
                     }

@@ -19,20 +19,95 @@
 
 package org.jikopster.vkasync.core;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.crashlytics.android.Crashlytics;
 
-public abstract class Exception extends Throwable
+import org.jikopster.vkasync.misc.Lambda;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class Exception extends Throwable
 {
-    public interface Fatal { }
+    public static abstract class Listener  {
+        public abstract void done();
+        public abstract void fail(Exception e);
+        public abstract void warn(Exception e);
+    }
+
+    public static class Fatal extends Exception
+    {
+        public Fatal() { super(); }
+
+        public Fatal(Throwable cause) { super(cause); }
+
+        public Fatal(String message) { super(message); }
+
+        @Override
+        public boolean isFatal() { return true; }
+    }
+
+    public static class Multi extends Exception {
+        private List<Exception> list = new ArrayList<>();
+
+        public Multi add(Exception e) {
+            list.add(e);
+            return this;
+        }
+
+        @Override
+        public void notify(Listener listener) {
+            for (Exception e : list)
+                e.notify(listener);
+        }
+
+        public void throwIfNotEmpty() throws Exception {
+            switch (list.size()) {
+                case 0:
+                    return;
+                case 1:
+                    throw list.get(0);
+                default:
+                    throw this;
+            }
+        }
+    }
 
     public static void log(Throwable throwable) {
         Crashlytics.logException(throwable);
         throwable.printStackTrace();
     }
 
-    public Exception() { }
+    static void notify(@Nullable Exception e, @NonNull Listener listener) {
+        if (e == null)
+            listener.done();
+        else
+            e.notify(listener);
+    }
 
-    public Exception(Throwable cause) {
-        super(cause);
+
+    public Exception() { super(); }
+
+    public Exception(Throwable cause) { super(cause); }
+
+    public Exception(String message) { super(message); }
+
+
+    public boolean isFatal() { return false; }
+
+    public void log() {
+        log(this);
+    }
+
+    public void notify(Listener listener) {
+        if (isFatal())
+            listener.fail(this);
+        else
+            listener.warn(this);
+
+        log();
     }
 }

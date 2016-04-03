@@ -25,7 +25,6 @@ import java.io.File;
 import org.jikopster.vkasync.action.Clear;
 import org.jikopster.vkasync.action.Sync;
 import org.jikopster.vkasync.action.VK;
-import org.jikopster.vkasync.core.*;
 import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.preference.Path;
 import org.jikopster.vkasync.ui.SingleToast;
@@ -182,11 +181,11 @@ public class ActivityPrefs extends PreferenceActivity
 
     private void sync() {
         sSyncState.PROGRESS.apply();
-        new Sync(this).sync(new Sync.Listener()
+        new Sync(this).sync(new Exception.Listener()
         {
             private int count;
             @Override
-            public void onComplete() {
+            public void done() {
                 sSyncState.ENABLED.apply();
                 if (count == 0)
                     show(SingleToast.State.DONE);
@@ -194,12 +193,12 @@ public class ActivityPrefs extends PreferenceActivity
                     show(SingleToast.State.WARN, getString(R.string.error_count, count));
             }
             @Override
-            public void onFail(Exception e) {
+            public void fail(Exception e) {
                 sSyncState.ENABLED.apply();
                 show(SingleToast.State.FAIL, e, null);
             }
             @Override
-            public void onWarning(Exception e) {
+            public void warn(Exception e) {
                 count++;
             }
         });

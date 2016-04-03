@@ -34,7 +34,7 @@ import static android.provider.MediaStore.Audio.Media.*;
 
 public class ContentHelper
 {
-    public class NullCursorException extends Exception implements Exception.Fatal {}
+    public class NullCursorException extends Exception.Fatal {}
 
     public class InsertException extends Exception { }
 

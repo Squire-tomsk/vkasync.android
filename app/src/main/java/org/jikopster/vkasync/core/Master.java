@@ -21,102 +21,85 @@
 package org.jikopster.vkasync.core;
 
 import android.os.AsyncTask;
-import android.os.Build;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.jikopster.vkasync.core.Worker.*;
 
-import org.jikopster.vkasync.misc.Lambda.Action1;
 
 public class Master {
 
     public interface TrackList {
-        Track get(String id);
+        @NonNull Track get(String id);
     }
 
-    public interface Listener extends Action1<Exception> { }
+    static class Runner {
+        Runner(Exception.Listener listener) { injected = listener; }
 
-    private interface ASyncTask
-    {
-        void doInBackground() throws Exception;
+        List<AsyncTask> mates = new ArrayList<>(4);
+        int count;
 
-        default void execute(List<AsyncTask> mates, Listener listener) {
-            AsyncTask<Void,Void,Exception> task = new AsyncTask<Void,Void,Exception>() {
-                @Override
-                protected Exception doInBackground(Void... params) {
-                    try {
-                        ASyncTask.this.doInBackground();
-                        return null;
-                    } catch (Exception e) {
-                        Exception.log(e);
-                        return e;
-                    }
-                }
-
-                @Override
-                protected void onPostExecute(Exception e) {
-                    if (!mates.remove(this)) return;
-                    if (e != null) {
-                        if (e instanceof Exception.Fatal) {
-                            for (int i = mates.size(); 0 < i--; )
-                                mates.get(i).cancel(true);
-                            mates.clear();
-                            listener.invoke(e);
-                            return;
-                        }
-                        listener.invoke(e);
-                    }
-                    if (mates.isEmpty())
-                        listener.invoke(null);
-                }
-            };
-            mates.add(task);
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-                task.execute();
-            else
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
-
-    public static void check(TrackList tracks, Iterable<Worker.Checker> checkers, Listener listener)
-    {
-        ArrayList<AsyncTask> tasks = new ArrayList<>();
-        for (Worker.Checker checker : checkers) {
-            ASyncTask task = () -> checker.check(tracks);
-            task.execute(tasks, listener);
-        }
-    }
-
-	public static void process(Iterable<Track> tracks, Iterable<Worker.Processor> processors, Listener listener)
-    {
-        for (Processor processor : processors) {
-            try {
-                processor.prepare();
-            } catch (Exception e) {
-                listener.invoke(e);
-                if (e instanceof Exception.Fatal)
-                    return;
+        final Exception.Listener injected;
+        final Exception.Listener listener = new Exception.Listener() {
+            @Override
+            public void done() {
+                if (--count > 0) return;
+                mates.clear();
+                injected.done();
             }
-        }
+            @Override
+            public void fail(Exception e) {
+                count = 0;
+                for (int i = mates.size(); 0 < i--; )
+                    mates.get(i).cancel(true);
+                mates.clear();
+                injected.fail(e);
+            }
+            @Override
+            public void warn(Exception e) {
+                count--;
+                injected.warn(e);
+            }
+        };
 
-        ArrayList<AsyncTask> tasks = new ArrayList<>();
+        void run(Async.Runnable runnable) {
+            mates.add(Async.run(listener, runnable));
+            count++;
+        }
+    }
+
+    public static void check(TrackList tracks, Iterable<Worker.Checker> checkers, Exception.Listener listener)
+    {
+        Runner runner = new Runner(listener);
+        for (Worker.Checker checker : checkers)
+            runner.run(() -> checker.check(tracks));
+    }
+
+	public static void process(Iterable<Track> tracks, Iterable<Worker.Processor> processors, Exception.Listener listener)
+    {
+        Runner runner = new Runner(listener);
         for (Processor processor : processors)
-            ((ASyncTask) (() -> {
-                for (Track track : tracks) {
-                    MultiException me = new MultiException();
+            runner.run (() -> {
+                Exception.Multi me = new Exception.Multi();
+                try {
+                    processor.prepare();
+                } catch (Exception e) {
+                    if (e.isFatal())
+                        throw e;
+                    else
+                        me.add(e);
+                }
+                for (Track track : tracks)
                     try {
                         processor.process(track);
                     } catch (Exception e) {
-                        if (e instanceof Exception.Fatal)
-                            throw e;
-                        else
-                            me.add(e);
+                        me.add(e);
+                        if (e.isFatal())
+                            throw me;
                     }
-                    me.throwIfNotEmpty();
-                }
-            })).execute(tasks, listener);
+                me.throwIfNotEmpty();
+            });
 	}
-
 }

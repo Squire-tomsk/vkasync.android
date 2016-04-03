@@ -41,24 +41,6 @@ import java.util.HashMap;
 
 public class Sync
 {
-    public static abstract class Listener implements Master.Listener
-    {
-        public void invoke(Exception e) {
-            if (e == null) {
-                onComplete();
-                return;
-            }
-            if (e instanceof Exception.Fatal)
-                onFail(e);
-            else
-                onWarning(e);
-        }
-
-        public abstract void onComplete();
-        public abstract void onFail(Exception e);
-        public abstract void onWarning(Exception e);
-    }
-
     public static String getMessage(Context context, @NonNull Exception e) {
         int resId = getMessageResId(e);
         return resId == 0
@@ -85,33 +67,25 @@ public class Sync
     private final String mCachePath;
     private final HashMap<String,Track> mTracks = new HashMap<>(100);
 
-    public void sync(Listener listener) {
-        class Listener extends Sync.Listener
+    public void sync(Exception.Listener listener) {
+        class Listener extends Exception.Listener
         {
-            Listener(@NonNull Lambda.Action then) {
-                this.then = then;
-            }
+            Listener(@NonNull Lambda.Action then) { this.then = then; }
 
             private final Lambda.Action then;
 
             @Override
-            public void onComplete() {
-                then.invoke();
-            }
+            public void done() { then.invoke(); }
             @Override
-            public void onFail(Exception e) {
-                listener.onFail(e);
-            }
+            public void fail(Exception e) { listener.fail(e); }
             @Override
-            public void onWarning(Exception e) {
-                listener.onWarning(e);
-            }
+            public void warn(Exception e) { listener.warn(e); }
         }
 
         check(new Listener(() -> process(listener)));
     }
 
-    public void check(Listener listener) {
+    public void check(Exception.Listener listener) {
         Iterable<Checker> checkers =
                 Fucktory.<Checker>fuckEmAll(
                         new Fucktory<>(
@@ -139,7 +113,7 @@ public class Sync
         );
     }
 
-    public void process(Listener listener) {
+    public void process(Exception.Listener listener) {
         Iterable<Processor> processors =
                 Fucktory.<Processor>fuckEmAll(
                         new Fucktory<>(

@@ -57,7 +57,7 @@ public class Local extends Worker
     public static class Processor implements Worker.Processor
     {
         public class LocalFileNotFoundException extends Exception { }
-        public class CantDeleteLocalFileException extends Exception implements Exception.Fatal { }
+        public class CantDeleteLocalFileException extends Exception.Fatal { }
 
         public Processor(Context context, String localPath) {
             mHelper = new ContentHelper(context, localPath);
