@@ -58,8 +58,7 @@ public class Master {
                 injected.fail(e);
             }
             @Override
-            public void warn(Exception e) {
-                count--;
+            public void warn(@NonNull Exception e) {
                 injected.warn(e);
             }
         };
