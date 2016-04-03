@@ -24,9 +24,6 @@
     <string name="app_name" translatable="false">vk a sync</string>
     
     <string name="album" translatable="false">@string/app_name</string>
-
-    <string name="download_notification_title" translatable="false">%s – %s</string>
-    <string name="download_notification_description">Tap to cancel</string>
     
     <string name="perform_title">Synchronize</string>
     <string name="perform_summary">Perform selected actions</string>

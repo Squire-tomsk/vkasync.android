@@ -20,8 +20,6 @@
   -->
 
 <resources>
-
-    <string name="download_notification_description">Нажмите для отмены</string>
     
     <string name="perform_title">Синхронизация</string>
     <string name="perform_summary">Выполнить выбранные действия</string>

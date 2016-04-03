@@ -33,7 +33,6 @@ import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 
-import org.jikopster.vkasync.R;
 import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Master.TrackList;
 import org.jikopster.vkasync.core.Track;
@@ -140,14 +139,10 @@ public class Cloud extends Worker
         private Context mContext;
         private DownloadManager mDownMan;
         private File mTempDir;
-        private String mNotificationTitle;
-        private String mNotificationDescription;
 
         @Override
         public void prepare() throws CantCreateTempDirException, NomediaCreationIOException {
             mDownMan = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
-            mNotificationTitle = mContext.getString(R.string.download_notification_title);
-            mNotificationDescription = mContext.getString(R.string.download_notification_description);
 
             if (!mTempDir.mkdirs())
             if (!mTempDir.isDirectory())
@@ -178,8 +173,7 @@ public class Cloud extends Worker
                     new Request(Uri.parse(track.url))
                             .setMimeType("application/octet-stream")
                             .setVisibleInDownloadsUi(false)
-                            .setTitle(String.format(mNotificationTitle, track.getArtist(), track.getTitle()))
-                            .setDescription(mNotificationDescription)
+                            .setTitle(String.format("%s - %s", track.getArtist(), track.getTitle()))
                             .setDestinationUri(Uri.fromFile(new File(mTempDir, track.getID())))
             );
 
