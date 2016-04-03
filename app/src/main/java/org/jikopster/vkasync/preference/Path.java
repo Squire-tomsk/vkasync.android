@@ -70,7 +70,7 @@ public class Path
         String current = PreferenceManager.getDefaultSharedPreferences(context).getString(key, null);
         if (current == null) {
             File def = getDefault(context, key);
-            current = def == null ? null : def.getAbsolutePath();
+            current = def == null ? null : def.getPath();
         }
         return current;
     }
@@ -79,7 +79,7 @@ public class Path
         String current = PreferenceManager
                 .getDefaultSharedPreferences(context).getString(context.getString(key), null);
         return current == null
-                ? defaultsByInteger.get(key).invoke(context).getAbsolutePath()
+                ? defaultsByInteger.get(key).invoke(context).getPath()
                 : current;
     }
 }
