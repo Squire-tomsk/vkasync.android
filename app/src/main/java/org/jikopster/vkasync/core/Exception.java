@@ -24,8 +24,6 @@ import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.jikopster.vkasync.misc.Lambda;
-
 import java.util.ArrayList;
 import java.util.List;
 
