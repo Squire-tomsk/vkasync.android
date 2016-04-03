@@ -57,15 +57,24 @@ public class Sync
     }
 
     public Sync(Context context) {
-        mContext = context;
-        mLocalPath = Path.getCurrent(context, Path.LOCAL);
-        mCachePath = Path.getCurrent(context, Path.CACHE);
+        this.context = context;
+        localPath = Path.getCurrent(context, Path.LOCAL);
+        cachePath = Path.getCurrent(context, Path.CACHE);
     }
 
-    private final Context mContext;
-    private final String mLocalPath;
-    private final String mCachePath;
-    private final HashMap<String,Track> mTracks = new HashMap<>(100);
+    private final Context context;
+    private final String localPath;
+    private final String cachePath;
+
+    private final HashMap<String,Track> trackMap = new HashMap<>(100);
+    private final Master.TrackList trackList = id -> {
+        Track track;
+        synchronized (trackMap) {
+            if (null == (track = trackMap.get(id)))
+                trackMap.put(id, (track = new Track(id)));
+        }
+        return track;
+    };
 
     public void sync(Exception.Listener listener) {
         class Listener extends Exception.Listener
@@ -89,50 +98,39 @@ public class Sync
         Iterable<Checker> checkers =
                 Fucktory.<Checker>fuckEmAll(
                         new Fucktory<>(
-                                () -> new Cloud.Checker(Size.get(mContext))),
+                                () -> new Cloud.Checker(Size.get(context))),
                         new Fucktory<>(
-                                () -> new Local.Checker(new File(mLocalPath))),
+                                () -> new Local.Checker(new File(localPath))),
                         new Fucktory<>(
-                                Bool.get(mContext, Bool.CACHE),
-                                () -> new Cache.Checker(new File(mCachePath))),
+                                Bool.get(context, Bool.CACHE),
+                                () -> new Cache.Checker(new File(cachePath))),
                         new Fucktory<>(
-                                () -> new Media.Checker(mContext, mLocalPath))
+                                () -> new Media.Checker(context, localPath))
                 );
 
-        Master.check(
-                id -> {
-                    Track track;
-                    synchronized (mTracks) {
-                        if (null == (track = mTracks.get(id)))
-                            mTracks.put(id, (track = new Track(id)));
-                    }
-                    return track;
-                },
-                checkers,
-                listener
-        );
+        Master.check(trackList, checkers, listener);
     }
 
     public void process(Exception.Listener listener) {
         Iterable<Processor> processors =
                 Fucktory.<Processor>fuckEmAll(
                         new Fucktory<>(
-                                Bool.get(mContext, Bool.CLOUD),
-                                () -> new Cloud.Processor(mContext, mLocalPath)),
+                                Bool.get(context, Bool.CLOUD),
+                                () -> new Cloud.Processor(context, localPath)),
                         new Fucktory<>(
-                                Bool.get(mContext, Bool.LOCAL),
-                                () -> new Local.Processor(mContext, mLocalPath)),
+                                Bool.get(context, Bool.LOCAL),
+                                () -> new Local.Processor(context, localPath)),
                         new Fucktory<>(
-                                Bool.get(mContext, Bool.CACHE),
+                                Bool.get(context, Bool.CACHE),
                                 () -> new Cache.Processor(
-                                        mContext,
-                                        new File(mCachePath),
-                                        new File(mLocalPath),
-                                        Bool.get(mContext, Bool.CLEAN))),
+                                        context,
+                                        new File(cachePath),
+                                        new File(localPath),
+                                        Bool.get(context, Bool.CLEAN))),
                         new Fucktory<>(
-                                () -> new Media.Processor(mContext, mLocalPath))
+                                () -> new Media.Processor(context, localPath))
                 );
 
-        Master.process(mTracks.values(), processors, listener);
+        Master.process(trackMap.values(), processors, listener);
     }
 }
