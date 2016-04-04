@@ -30,7 +30,7 @@ import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
-import org.jikopster.vkasync.misc.Lambda.Action;
+import org.jikopster.vkasync.misc.Lambda;
 
 public class VK
 {
@@ -40,10 +40,10 @@ public class VK
 
     private Activity mActivity;
 
-    private Action mLoginListener;
+    private Lambda.Action mLoginListener;
 
-    private Action mRefreshListener;
-    public void setOnRefreshListener(@Nullable Action listener) {
+    private Lambda.Action mRefreshListener;
+    public void setOnRefreshListener(@Nullable Lambda.Action listener) {
         mRefreshListener = listener;
     }
 
@@ -58,7 +58,7 @@ public class VK
         }
     }
 
-    public void login(@NonNull Action listener) {
+    public void login(@NonNull Lambda.Action listener) {
         if (VKSdk.isLoggedIn()) {
             listener.invoke();
             return;
@@ -67,7 +67,7 @@ public class VK
         login();
     }
 
-    public void login() { VKSdk.login(mActivity, "wall", "audio"); }
+    public void login () { VKSdk.login(mActivity, "wall", "audio"); }
 
     public void logout() { VKSdk.logout(); refresh(); }
 
@@ -83,7 +83,7 @@ public class VK
             @Override
             public void onResult(VKAccessToken result) { refresh(); }
             @Override
-            public void onError(VKError error)         { refresh(); }
+            public void onError (VKError       error ) { refresh(); }
         });
     }
 }
