@@ -167,19 +167,6 @@ public class ActivityPrefs extends PreferenceActivity
 		((AlertDialog)dialog).setMessage(s);
 	}
 
-    private void show(SingleToast.State state) {
-        show(state, null);
-    }
-    private void show(SingleToast.State state, String message) {
-        SingleToast.show(this, state, message);
-    }
-    private void show(SingleToast.State state, Exception e, String text) {
-        String message = Sync.getMessage(this, e);
-        if (!TextUtils.isEmpty(text))
-            message = String.format("%s%n%s", message, text);
-        show(state, message);
-    }
-
     private static ActionRunner sSyncAction = new ActionRunner(sSyncState, Sync.class);
     private void sync() { sSyncAction.run(this); }
 
