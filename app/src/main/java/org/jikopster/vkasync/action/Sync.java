@@ -23,23 +23,12 @@ package org.jikopster.vkasync.action;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.jikopster.vkasync.core.*;
 import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Worker.*;
 import org.jikopster.vkasync.misc.Fucktory;
-import org.jikopster.vkasync.misc.Lambda;
 import org.jikopster.vkasync.preference.Bool;
-import org.jikopster.vkasync.preference.Path;
-import org.jikopster.vkasync.preference.Size;
-import org.jikopster.vkasync.worker.Cache;
-import org.jikopster.vkasync.worker.Cloud;
-import org.jikopster.vkasync.worker.Local;
-import org.jikopster.vkasync.worker.Media;
 
-import java.io.File;
-import java.util.HashMap;
-
-public class Sync
+public class Sync extends Action
 {
     public static String getMessage(Context context, @NonNull Exception e) {
         int resId = getMessageResId(e);
@@ -56,81 +45,39 @@ public class Sync
         }
     }
 
-    public Sync(Context context) {
-        this.context = context;
-        localPath = Path.getCurrent(context, Path.LOCAL);
-        cachePath = Path.getCurrent(context, Path.CACHE);
-    }
+    public Sync(Context context) { super(context); }
 
-    private final Context context;
-    private final String localPath;
-    private final String cachePath;
-
-    private final HashMap<String,Track> trackMap = new HashMap<>(100);
-    private final Master.TrackList trackList = id -> {
-        Track track;
-        synchronized (trackMap) {
-            if (null == (track = trackMap.get(id)))
-                trackMap.put(id, (track = new Track(id)));
-        }
-        return track;
-    };
-
-    public void sync(Exception.Listener listener) {
-        class Listener extends Exception.Listener
-        {
-            Listener(@NonNull Lambda.Action then) { this.then = then; }
-
-            private final Lambda.Action then;
-
-            @Override
-            public void done() { then.invoke(); }
-            @Override
-            public void fail(Exception e) { listener.fail(e); }
-            @Override
-            public void warn(Exception e) { listener.warn(e); }
-        }
-
-        check(new Listener(() -> process(listener)));
-    }
-
-    public void check(Exception.Listener listener) {
-        Iterable<Checker> checkers =
+    @Override
+    protected Iterable<Checker> getCheckers() {
+        return
                 Fucktory.<Checker>fuckEmAll(
                         new Fucktory<>(
-                                () -> new Cloud.Checker(Size.get(context))),
+                            this::getCloudChecker),
                         new Fucktory<>(
-                                () -> new Local.Checker(new File(localPath))),
+                            this::getLocalChecker),
                         new Fucktory<>(
-                                Bool.get(context, Bool.CACHE),
-                                () -> new Cache.Checker(new File(cachePath))),
+                            Bool.get(context, Bool.CACHE),
+                            this::getCacheChecker),
                         new Fucktory<>(
-                                () -> new Media.Checker(context, localPath))
+                            this::getMediaChecker)
                 );
-
-        Master.check(trackList, checkers, listener);
     }
 
-    public void process(Exception.Listener listener) {
-        Iterable<Processor> processors =
+    @Override
+    protected Iterable<Processor> getProcessors() {
+        return
                 Fucktory.<Processor>fuckEmAll(
                         new Fucktory<>(
                                 Bool.get(context, Bool.CLOUD),
-                                () -> new Cloud.Processor(context, localPath)),
+                                this::getCloudProcessor),
                         new Fucktory<>(
                                 Bool.get(context, Bool.LOCAL),
-                                () -> new Local.Processor(context, localPath)),
+                                this::getLocalProcessor),
                         new Fucktory<>(
                                 Bool.get(context, Bool.CACHE),
-                                () -> new Cache.Processor(
-                                        context,
-                                        new File(cachePath),
-                                        new File(localPath),
-                                        Bool.get(context, Bool.CLEAN))),
+                                this::getCacheProcessor),
                         new Fucktory<>(
-                                () -> new Media.Processor(context, localPath))
+                                this::getMediaProcessor)
                 );
-
-        Master.process(trackMap.values(), processors, listener);
     }
 }

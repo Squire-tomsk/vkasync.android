@@ -20,48 +20,56 @@
 
 package org.jikopster.vkasync.action;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.MediaStore;
 
-import org.jikopster.vkasync.misc.Lambda;
-import org.jikopster.vkasync.preference.Path;
-import org.jikopster.vkasync.worker.ContentHelper;
+import org.jikopster.vkasync.core.Async;
+import org.jikopster.vkasync.core.Exception;
+import org.jikopster.vkasync.core.Worker.*;
+import org.jikopster.vkasync.misc.Fucktory;
 
 import java.io.File;
 
-public class Clear
+public class Clear extends Action
 {
-    public static void clear(Context context, Lambda.Action1<Boolean> listener)
-    {
-        new AsyncTask<Void, Void, Boolean>() {
-            private final String mPath = Path.getCurrent(context, Path.LOCAL);
-            private final File mDir = new File(mPath);
+    public class ClearException extends Exception.Fatal { }
 
-            private Uri mUri = MediaStore.Audio.Media.getContentUriForPath(mPath);
 
-            private ContentResolver mCoRe = context.getContentResolver();
+    public Clear(Context context) { super(context); }
 
-            @Override
-            protected void onPostExecute(Boolean result) {
-                listener.invoke(result);
-            }
+    @Override
+    public void run(Exception.Listener listener) {
+        super.run(
+                new Listener(listener, () -> Async.run(listener, () -> {
+                    if (!delete(new File(localPath)))
+                        throw new ClearException();
+                }))
+        );
+    }
 
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                boolean result = delete(mDir);
-                mCoRe.delete(mUri, ContentHelper.whereByPath(mPath), null);
-                return result;
-            }
+    @Override
+    protected Iterable<Checker> getCheckers() {
+        return
+                Fucktory.<Checker>fuckEmAll(
+                        new Fucktory<>(this::getLocalChecker),
+                        new Fucktory<>(this::getMediaChecker)
+                );
+    }
 
-            private boolean delete(File file) {
-                File[] files = file.listFiles();
-                if (files != null)
-                    for (File f : files) delete(f);
-                return file.delete();
-            }
-        }.execute();
+    @Override
+    protected Iterable<Processor> getProcessors() {
+        return
+                Fucktory.<Processor>fuckEmAll(
+                        new Fucktory<>(this::getLocalProcessor),
+                        new Fucktory<>(this::getMediaProcessor)
+                );
+    }
+
+    public boolean delete(File file) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null)
+                for (File f : files) delete(f);
+        }
+        return file.delete();
     }
 }

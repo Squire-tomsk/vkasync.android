@@ -27,6 +27,7 @@ import org.jikopster.vkasync.action.Sync;
 import org.jikopster.vkasync.action.VK;
 import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.preference.Path;
+import org.jikopster.vkasync.ui.ActionRunner;
 import org.jikopster.vkasync.ui.SingleToast;
 
 import org.jikopster.vkasync.ui.ActionPreference;
@@ -179,40 +180,11 @@ public class ActivityPrefs extends PreferenceActivity
         show(state, message);
     }
 
-    private void sync() {
-        sSyncState.PROGRESS.apply();
-        new Sync(this).sync(new Exception.Listener()
-        {
-            private int count;
-            @Override
-            public void done() {
-                sSyncState.ENABLED.apply();
-                if (count == 0)
-                    show(SingleToast.State.DONE);
-                else
-                    show(SingleToast.State.WARN, getString(R.string.error_count, count));
-            }
-            @Override
-            public void fail(@NonNull Exception e) {
-                sSyncState.ENABLED.apply();
-                show(SingleToast.State.FAIL, e, null);
-            }
-            @Override
-            public void warn(@NonNull Exception e) {
-                count++;
-            }
-        });
-    }
+    private static ActionRunner sSyncAction = new ActionRunner(sSyncState, Sync.class);
+    private void sync() { sSyncAction.run(this); }
 
-    private void clear() {
-        sCleanState.PROGRESS.apply();
-        Clear.clear(this, result -> {
-            show(result
-                    ? SingleToast.State.DONE
-                    : SingleToast.State.FAIL);
-            sCleanState.ENABLED.apply();
-        });
-    }
+    private static ActionRunner sClearAction = new ActionRunner(sCleanState, Clear.class);
+    private void clear() { sClearAction.run(this); }
 }
 
 
