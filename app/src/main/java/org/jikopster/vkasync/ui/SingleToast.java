@@ -35,7 +35,7 @@ public class SingleToast
 {
     public enum State {
         DONE(R.color.done, R.string.done),
-        WARN(R.color.warn, R.string.fail),
+        WARN(R.color.warn, R.string.done),
         FAIL(R.color.fail, R.string.fail);
 
         State(int color, int title) {
