@@ -52,8 +52,8 @@ android {
         applicationId "org.jikopster.vkasync"
         minSdkVersion 9
         targetSdkVersion 22
-        versionCode 23
-        versionName "1.10.1.23"
+        versionCode 24
+        versionName "1.10.2.24"
     }
     buildTypes {
         release {
