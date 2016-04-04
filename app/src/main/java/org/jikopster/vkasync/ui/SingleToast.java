@@ -23,9 +23,11 @@ package org.jikopster.vkasync.ui;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AlignmentSpan;
 import android.text.style.ForegroundColorSpan;
 import android.widget.Toast;
 
@@ -49,19 +51,24 @@ public class SingleToast
 
     @SuppressWarnings("deprecation")
     public static void show(Context context, State state, @Nullable String message) {
-        String title = context.getString(state.title);
+        SpannableStringBuilder text = new SpannableStringBuilder(context.getString(state.title));
+
         int color;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             color = context.getResources().getColor(state.color);
         else
             color = context.getResources().getColor(state.color, context.getTheme());
-
-        SpannableStringBuilder text = new SpannableStringBuilder(title);
-        text.setSpan(new ForegroundColorSpan(color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        // set title color
+        text.setSpan(new ForegroundColorSpan(color),
+                            0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        // prepend app name
         text.insert(0, String.format("%s: ", context.getString(R.string.app_name)));
-
+        // append the message
         if (!TextUtils.isEmpty(message))
             text.append(String.format("%n%s", message));
+        // set alignment (center)
+        text.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                            0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         int duration = message == null
                 ? Toast.LENGTH_SHORT

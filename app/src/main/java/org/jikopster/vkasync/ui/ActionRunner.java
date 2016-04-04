@@ -27,6 +27,7 @@ import org.jikopster.vkasync.R;
 import org.jikopster.vkasync.action.Action;
 import org.jikopster.vkasync.core.Exception;
 
+
 public class ActionRunner
 {
     public ActionRunner(ActionState state, Class<? extends Action> action) {
