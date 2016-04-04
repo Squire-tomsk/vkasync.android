@@ -22,7 +22,6 @@ package org.jikopster.vkasync.action;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.vk.sdk.VKAccessToken;
@@ -58,16 +57,15 @@ public class VK
         }
     }
 
-    public void login(@NonNull Lambda.Action listener) {
-        if (VKSdk.isLoggedIn()) {
-            listener.invoke();
-            return;
-        }
+    public void login(@Nullable Lambda.Action listener) {
         mLoginListener = listener;
-        login();
+        if (VKSdk.isLoggedIn())
+            refresh();
+        else
+            VKSdk.login(mActivity, "wall", "audio");
     }
 
-    public void login () { VKSdk.login(mActivity, "wall", "audio"); }
+    public void login () { login(null); }
 
     public void logout() { VKSdk.logout(); refresh(); }
 
