@@ -21,30 +21,14 @@
 package org.jikopster.vkasync.action;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
-import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.core.Worker.*;
 import org.jikopster.vkasync.misc.Fucktory;
 import org.jikopster.vkasync.preference.Bool;
 
+
 public class Sync extends Action
 {
-    public static String getMessage(Context context, @NonNull Exception e) {
-        int resId = getMessageResId(e);
-        return resId == 0
-                ? null
-                : context.getString(resId);
-    }
-
-    public static int getMessageResId(@NonNull Exception ex) {
-        try {
-            throw ex;
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
     public Sync(Context context) { super(context); }
 
     @Override
