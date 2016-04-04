@@ -164,10 +164,10 @@ public class ActivityPrefs extends PreferenceActivity
 		((AlertDialog)dialog).setMessage(s);
 	}
 
-    private static ActionRunner sSyncAction = new ActionRunner(sSyncState, Sync.class);
+    private static ActionRunner sSyncAction = new ActionRunner(sSyncState, Sync::new);
     private void sync() { sSyncAction.run(this); }
 
-    private static ActionRunner sClearAction = new ActionRunner(sCleanState, Clear.class);
+    private static ActionRunner sClearAction = new ActionRunner(sCleanState, Clear::new);
     private void clear() { sClearAction.run(this); }
 }
 

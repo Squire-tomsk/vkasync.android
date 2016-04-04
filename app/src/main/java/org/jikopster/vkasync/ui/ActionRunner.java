@@ -26,30 +26,23 @@ import android.support.annotation.NonNull;
 import org.jikopster.vkasync.R;
 import org.jikopster.vkasync.action.Action;
 import org.jikopster.vkasync.core.Exception;
+import org.jikopster.vkasync.misc.Lambda;
 
 
 public class ActionRunner
 {
-    public ActionRunner(ActionState state, Class<? extends Action> action) {
+    public ActionRunner(ActionState state, Lambda.Function1<Context,Action> ctr) {
         this.state = state;
-        this.action = action;
+        this.action = ctr;
     }
 
-    private final Class<? extends Action> action;
+    private final Lambda.Function1<Context, Action> action;
 
     private final ActionState state;
 
     public void run(Context context) {
-        Action instance;
-        try {
-             instance = action.getConstructor(Context.class).newInstance(context);
-        } catch (java.lang.Exception e) {
-            throw new RuntimeException(e);
-        }
-
         state.PROGRESS.apply();
-
-        instance.run(new Exception.Listener() {
+        action.invoke(context).run(new Exception.Listener() {
             int count;
 
             @Override
