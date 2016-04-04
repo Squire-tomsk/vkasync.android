@@ -62,11 +62,9 @@ public class Cloud extends Worker
 
         private class Listener extends VKRequest.VKRequestListener
         {
-            Listener(TrackList tracks) {
-                mTrackList = tracks;
-            }
+            Listener(TrackList tracks) { this.tracks = tracks; }
 
-            TrackList mTrackList;
+            final TrackList tracks;
 
             @Override
             public void onComplete(VKResponse response) {
@@ -76,16 +74,11 @@ public class Cloud extends Worker
                     JSONArray items =
                             json.getJSONArray("items");
 
-                    final int length = items.length();
-                    final int bottom = mLimit > 0 && mLimit < length
-                            ? mLimit
-                            : length;
-
-                    for (int i = bottom; 0 < i--; ) {
+                    for (int i = items.length(); 0 < i--; ) {
                         json = items.getJSONObject(i);
                         String id = json.getString("owner_id") + "_" + json.getString("id");
 
-                        Track track = mTrackList.get(id).set(FLAG);
+                        Track track = tracks.get(id).set(FLAG);
                         if (json.has("url"))
                             track.url = json.getString("url").replaceFirst("https://", "http://");
 
@@ -105,16 +98,15 @@ public class Cloud extends Worker
             }
         }
 
-        public Checker(int limit) {
-            mLimit = limit;
-        }
+        public Checker(int limit) { this.limit = limit; }
 
-        private final int mLimit;
+        private final int limit;
         private Exception mException;
 
         @Override
         public void check(TrackList tracks) throws Exception {
-            new VKRequest("audio.get", VKParameters.from("need_user", "0", "v", "5.25"))
+            new VKRequest("audio.get",
+                    VKParameters.from("need_user", "0", "v", "5.25", "count", Integer.toString(limit)))
                 .executeSyncWithListener(new Listener(tracks));
 
             if (mException != null)
