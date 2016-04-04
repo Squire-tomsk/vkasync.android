@@ -25,10 +25,8 @@ import java.io.File;
 import org.jikopster.vkasync.action.Clear;
 import org.jikopster.vkasync.action.Sync;
 import org.jikopster.vkasync.action.VK;
-import org.jikopster.vkasync.core.Exception;
 import org.jikopster.vkasync.preference.Path;
 import org.jikopster.vkasync.ui.ActionRunner;
-import org.jikopster.vkasync.ui.SingleToast;
 
 import org.jikopster.vkasync.ui.ActionPreference;
 import org.jikopster.vkasync.ui.ActionState;
@@ -47,7 +45,6 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.StyleSpan;
 
 
