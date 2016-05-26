@@ -73,7 +73,7 @@
 	        android:summaryOff="@string/clean_switch_summary_off"
 	        android:defaultValue="false"
 	        android:dependency="@string/cache_switch" />
-	    <com.ls.directoryselector.DirectoryPreference
+	    <org.jikopster.vkasync.ui.DirPreference
 	        android:key="@string/folder_cache"
 			android:defaultValue="@string/folder_cache"
 			android:icon="@drawable/ic_folder"
@@ -101,7 +101,7 @@
 	        android:summary="@string/clear_summary"
 	        android:persistent="false"
 	        android:dependency="@string/key_action_sync" />
-	    <com.ls.directoryselector.DirectoryPreference
+		<org.jikopster.vkasync.ui.DirPreference
 	        android:key="@string/folder_local"
 			android:defaultValue="@string/folder_local"
 			android:icon="@drawable/ic_folder"

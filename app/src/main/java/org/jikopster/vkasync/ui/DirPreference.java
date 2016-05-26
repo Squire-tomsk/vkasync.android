@@ -28,9 +28,11 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.ls.directoryselector.DirectoryPreference;
+
 import org.jikopster.vkasync.preference.Path;
 
-public class DirPreference extends EditTextPreference implements OnPreferenceChangeListener
+public class DirPreference extends DirectoryPreference implements OnPreferenceChangeListener
 {
 	public DirPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
